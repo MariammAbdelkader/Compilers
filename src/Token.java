@@ -1,6 +1,6 @@
 public class Token {
-    private String tokenType;  // Change to JavaBean naming convention
-    private String tokenVal;   // Change to JavaBean naming convention
+    private String tokenType;
+    private String tokenVal;
 
     public Token() {
         tokenVal = "";
