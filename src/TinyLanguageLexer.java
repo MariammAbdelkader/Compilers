@@ -42,6 +42,21 @@ public class TinyLanguageLexer {
         } catch (Exception e) {
             System.err.println("Error during tokenization: " + e.getMessage());
         }
+
+        // To test getNextToken func
+        Token token = Token.getNextToken();
+
+        if (token != null)
+        {
+            System.out.println("Token Type: " + token.getTokenType());
+            System.out.println("Token Value: " + token.getTokenVal());
+        }
+
+        if (token != null) {
+            Token token2 = Token.getNextToken();
+            System.out.println("Token Type: " + token2.getTokenType());
+            System.out.println("Token Value: " + token2.getTokenVal());
+        }
     }
 
     public static List<Token> tokenize(String input) throws Exception {
@@ -82,6 +97,7 @@ public class TinyLanguageLexer {
             }
 
             tokens.add(new Token(tokenType, tokenValue));
+            Token.addToken (tokenType, tokenValue);
         }
 
         return tokens;
