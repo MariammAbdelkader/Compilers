@@ -25,11 +25,12 @@ public class TinyLanguageLexer {
             lines.add(line);
         }
 
+        // Specify the output file path
+        String outputFilePath = "tokens_output.txt";
+
         try {
             List<Token> tokens = tokenize(String.join("\n", lines));
 
-            // Specify the output file path
-            String outputFilePath = "tokens_output.txt";
 
             // Write tokens to a file
             try (FileWriter writer = new FileWriter(outputFilePath)) {
@@ -40,6 +41,12 @@ public class TinyLanguageLexer {
 
             System.out.println("Tokenization complete. Results written to: " + outputFilePath);
         } catch (Exception e) {
+            try (FileWriter writer = new FileWriter(outputFilePath)) {
+                // Clear the output file
+            }
+            catch (IOException ioException) {
+                System.err.println("Error clearing the output file: " + ioException.getMessage());
+            }
             System.err.println("Error during tokenization: " + e.getMessage());
         }
 
