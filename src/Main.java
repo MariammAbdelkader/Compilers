@@ -19,8 +19,8 @@ public class Main {
 
         // Specify the output file path
         String outputFilePath = "tokens_output.txt";
-        List<Token> tokens = TinyLanguageLexer.tokenize(String.join("\n", lines));
         try {
+            List<Token> tokens = TinyLanguageLexer.tokenize(String.join("\n", lines));
             // Write tokens to a file
             try (FileWriter writer = new FileWriter(outputFilePath)) {
                 for (Token token : tokens) {
@@ -37,5 +37,5 @@ public class Main {
                 System.err.println("Error clearing the output file: " + ioException.getMessage());
             }
         }
-        
+    }
 }
