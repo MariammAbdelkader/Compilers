@@ -109,4 +109,49 @@ public class Parser {
         expr();
     }
 
+    // Expr → simple-exp [comparison-op simple-exp]
+    private void expr() throws Exception {
+        simpleExp();
+        if (currentToken() != null &&
+                (currentTokenIs("LESSTHAN") || currentTokenIs("EQUAL"))) {
+            match(currentToken().getTokenType()); // Match comparison operator
+            simpleExp();
+        }
+    }
+
+    // Simple-exp → term {add-op term}
+    private void simpleExp() throws Exception {
+        term();
+        while (currentToken() != null &&
+                (currentTokenIs("PLUS") || currentTokenIs("MINUS"))) {
+            match(currentToken().getTokenType()); // Match addition operator
+            term();
+        }
+    }
+
+    // Term → factor {mul-op factor}
+    private void term() throws Exception {
+        factor();
+        while (currentToken() != null &&
+                (currentTokenIs("MULT") || currentTokenIs("DIV"))) {
+            match(currentToken().getTokenType()); // Match multiplication operator
+            factor();
+        }
+    }
+
+    // Factor → (expr) | number | identifier
+    private void factor() throws Exception {
+        if (currentTokenIs("OPENBRACKET")) {
+            match("OPENBRACKET");
+            expr();
+            match("CLOSEDBRACKET");
+        } else if (currentTokenIs("NUMBER")) {
+            match("NUMBER");
+        } else if (currentTokenIs("IDENTIFIER")) {
+            match("IDENTIFIER");
+        } else {
+            throw new Exception("Syntax Error: Unexpected factor token " + currentToken().getTokenType());
+        }
+    }
+
 }
