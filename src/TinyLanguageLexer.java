@@ -1,5 +1,4 @@
 import java.util.*;
-import java.io.*;
 
 public class TinyLanguageLexer {
 
@@ -13,58 +12,6 @@ public class TinyLanguageLexer {
             "EQUAL", "+", "PLUS", "-", "MINUS", "*", "MULT", "/", "DIV",
             "(", "OPENBRACKET", ")", "CLOSEDBRACKET"
     );
-
-    public static void main(String[] args) {
-        Scanner scanner = new Scanner(System.in);
-        System.out.println("Enter your TINY language code:");
-
-        List<String> lines = new ArrayList<>();
-        while (true) {
-            String line = scanner.nextLine();
-            if (line.isBlank()) break;
-            lines.add(line);
-        }
-
-        // Specify the output file path
-        String outputFilePath = "tokens_output.txt";
-
-        try {
-            List<Token> tokens = tokenize(String.join("\n", lines));
-
-
-            // Write tokens to a file
-            try (FileWriter writer = new FileWriter(outputFilePath)) {
-                for (Token token : tokens) {
-                    writer.write(token.getTokenVal() + " , " + token.getTokenType() + "\n");
-                }
-            }
-
-            System.out.println("Tokenization complete. Results written to: " + outputFilePath);
-        } catch (Exception e) {
-            try (FileWriter writer = new FileWriter(outputFilePath)) {
-                // Clear the output file
-            }
-            catch (IOException ioException) {
-                System.err.println("Error clearing the output file: " + ioException.getMessage());
-            }
-            System.err.println("Error during tokenization: " + e.getMessage());
-        }
-
-        // To test getNextToken func
-        Token token = Token.getNextToken();
-
-        if (token != null)
-        {
-            System.out.println("Token Type: " + token.getTokenType());
-            System.out.println("Token Value: " + token.getTokenVal());
-        }
-
-        if (token != null) {
-            Token token2 = Token.getNextToken();
-            System.out.println("Token Type: " + token2.getTokenType());
-            System.out.println("Token Value: " + token2.getTokenVal());
-        }
-    }
 
     public static List<Token> tokenize(String input) throws Exception {
         // Remove comments
