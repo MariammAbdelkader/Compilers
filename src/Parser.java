@@ -1,8 +1,9 @@
+import javax.swing.tree.DefaultMutableTreeNode;
 import java.util.List;
 
 public class Parser {
 
-    private List<Token> tokens;
+    public List<Token> tokens;
     private int currentTokenIndex;
 
     public Parser(List<Token> tokens) {
@@ -28,127 +29,171 @@ public class Parser {
 
     // Grammar rules
 
-    public void parse() throws Exception {
-        program();
+    public DefaultMutableTreeNode parse() throws Exception {
+        return program();
     }
 
     // Program → stmt-sequence
-    private void program() throws Exception {
-        statementSequence();
+    private DefaultMutableTreeNode program() throws Exception {
+        return statementSequence();
     }
 
     // Stmt-sequence → stmt {; stmt}
-    private void statementSequence() throws Exception {
-        stmt();
+    DefaultMutableTreeNode statementSequence() throws Exception {
+        DefaultMutableTreeNode seqNode= new DefaultMutableTreeNode("stmt-sequence");
+        seqNode.add(stmt());
         while (currentTokenIs("SEMICOLON")) {
             match("SEMICOLON");
-            stmt();
+            seqNode.add(stmt());
         }
+        return seqNode;
     }
 
     // Stmt → if-stmt | repeat-stmt | assign-stmt | read-stmt | write-stmt
-    private void stmt() throws Exception {
+     DefaultMutableTreeNode stmt() throws Exception {
         switch (currentToken().getTokenType()) {
             case "IF":
-                ifStmt();
-                break;
+                return ifStmt();
             case "REPEAT":
-                repeatStmt();
-                break;
+                return repeatStmt();
             case "IDENTIFIER":
-                assignStmt();
-                break;
+                return assignStmt();
             case "READ":
-                readStmt();
-                break;
+                return readStmt();
             case "WRITE":
-                writeStmt();
-                break;
+                return writeStmt();
             default:
                 throw new Exception("Syntax Error: Unexpected statement token " + currentToken().getTokenType());
         }
     }
 
     // If-stmt → if expr then stmt-sequence [else stmt-sequence] end
-    private void ifStmt() throws Exception {
+    DefaultMutableTreeNode ifStmt() throws Exception {
+        DefaultMutableTreeNode ifNode = new DefaultMutableTreeNode("IF");
+
         match("IF");
-        expr();
+        DefaultMutableTreeNode conditionNode = expr();
+        ifNode.add(conditionNode);
         match("THEN");
-        statementSequence();
+        DefaultMutableTreeNode thenNode = statementSequence();
+        ifNode.add(thenNode);
         if (currentTokenIs("ELSE")) {
             match("ELSE");
-            statementSequence();
+            DefaultMutableTreeNode elseNode= statementSequence();
+            ifNode.add(elseNode);
         }
         match("END");
+
+        return ifNode;
     }
 
     // Repeat-stmt → repeat stmt-sequence until expr
-    private void repeatStmt() throws Exception {
+     DefaultMutableTreeNode repeatStmt() throws Exception {
+        DefaultMutableTreeNode repeatNode = new DefaultMutableTreeNode("REPEAT");
+
         match("REPEAT");
-        statementSequence();
+        DefaultMutableTreeNode bodyNode = statementSequence();
+        repeatNode.add(bodyNode);
         match("UNTIL");
-        expr();
+        DefaultMutableTreeNode conditionNode =expr();
+        repeatNode.add(conditionNode);
+        return repeatNode;
     }
 
     // Assign-stmt → identifier := expr
-    private void assignStmt() throws Exception {
+    DefaultMutableTreeNode assignStmt() throws Exception {
+        DefaultMutableTreeNode assignNode = new DefaultMutableTreeNode("ASSIGN_STMT");
+
         match("IDENTIFIER");
+        DefaultMutableTreeNode idNode = new DefaultMutableTreeNode("IDENTIFIER");
+        assignNode.add(idNode);
         match("ASSIGN");
-        expr();
+        DefaultMutableTreeNode expNode= expr();
+        assignNode.add(expNode);
+        return assignNode;
     }
 
     // Read-stmt → read identifier
-    private void readStmt() throws Exception {
+    DefaultMutableTreeNode readStmt() throws Exception {
+        DefaultMutableTreeNode readNode = new DefaultMutableTreeNode("READ");
         match("READ");
         match("IDENTIFIER");
+        return readNode;
+
     }
 
     // Write-stmt → write expr
-    private void writeStmt() throws Exception {
+    DefaultMutableTreeNode writeStmt() throws Exception {
+        DefaultMutableTreeNode writeNode = new DefaultMutableTreeNode("WRITE");
         match("WRITE");
-        expr();
+        writeNode.add(expr());
+       return writeNode;
     }
 
     // Expr → simple-exp [comparison-op simple-exp]
-    private void expr() throws Exception {
-        simpleExp();
+    DefaultMutableTreeNode expr() throws Exception {
+        DefaultMutableTreeNode expNode = simpleExp();
+       // expNode.add(simpleExp());
         if (currentToken() != null &&
                 (currentTokenIs("LESSTHAN") || currentTokenIs("EQUAL"))) {
+            DefaultMutableTreeNode comparisonNode = new DefaultMutableTreeNode(currentToken().getTokenType());
             match(currentToken().getTokenType()); // Match comparison operator
-            simpleExp();
+            comparisonNode.add(expNode);
+            comparisonNode.add(simpleExp());
+            expNode = comparisonNode;
         }
+        return expNode;
     }
 
     // Simple-exp → term {add-op term}
-    private void simpleExp() throws Exception {
-        term();
+    DefaultMutableTreeNode simpleExp() throws Exception {
+        DefaultMutableTreeNode termNode = term();
         while (currentToken() != null &&
                 (currentTokenIs("PLUS") || currentTokenIs("MINUS"))) {
+            DefaultMutableTreeNode opNode = new DefaultMutableTreeNode(currentToken().getTokenType());
             match(currentToken().getTokenType()); // Match addition operator
-            term();
+            opNode.add(termNode);
+            opNode.add(term());
+            termNode= opNode;
+
         }
+        return  termNode;
     }
 
     // Term → factor {mul-op factor}
-    private void term() throws Exception {
-        factor();
+    DefaultMutableTreeNode term() throws Exception {
+        DefaultMutableTreeNode termNode = factor();
+
         while (currentToken() != null &&
                 (currentTokenIs("MULT") || currentTokenIs("DIV"))) {
             match(currentToken().getTokenType()); // Match multiplication operator
-            factor();
+            DefaultMutableTreeNode mulop = new DefaultMutableTreeNode(currentToken().getTokenType());
+            mulop.add(termNode);
+            mulop.add(factor());
+            termNode = mulop;
         }
+        return  termNode;
     }
 
     // Factor → (expr) | number | identifier
-    private void factor() throws Exception {
+    private DefaultMutableTreeNode factor() throws Exception {
         if (currentTokenIs("OPENBRACKET")) {
+            DefaultMutableTreeNode factorNode = new DefaultMutableTreeNode("FACTOR");
+            DefaultMutableTreeNode leftbracketNode = new DefaultMutableTreeNode("OPENBRACKET");
             match("OPENBRACKET");
-            expr();
+            factorNode.add(leftbracketNode);
+            factorNode.add(expr());
+            DefaultMutableTreeNode rightBracketNode = new DefaultMutableTreeNode("CLOSEDBRACKET");
             match("CLOSEDBRACKET");
+            factorNode.add(rightBracketNode);
+
+            return factorNode;
         } else if (currentTokenIs("NUMBER")) {
             match("NUMBER");
+            return new DefaultMutableTreeNode("NUMBER");
         } else if (currentTokenIs("IDENTIFIER")) {
             match("IDENTIFIER");
+            return new DefaultMutableTreeNode("IDENTIFIER");
         } else {
             throw new Exception("Syntax Error: Unexpected factor token " + currentToken().getTokenType());
         }
