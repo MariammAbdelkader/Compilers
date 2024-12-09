@@ -18,7 +18,7 @@ public class TinyLanguageLexer {
         input = input.replaceAll("\\{[^}]*}", ""); // Remove comments enclosed in {}
 
         List<Token> tokens = new ArrayList<>();
-        StringTokenizer tokenizer = new StringTokenizer(input, "[a-zA-Z]+|\\d+|[;<>=+-*/() \t\n]", true);
+        StringTokenizer tokenizer = new StringTokenizer(input, "[;<>=+-*/() \t\n]", true);
 
         while (tokenizer.hasMoreTokens()) {
             String tokenValue = tokenizer.nextToken().trim();

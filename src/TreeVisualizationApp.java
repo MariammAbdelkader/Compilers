@@ -1,15 +1,10 @@
 import javax.swing.*;
-import javax.swing.tree.DefaultMutableTreeNode;
 import java.awt.*;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
 
 public class TreeVisualizationApp extends JPanel {
-    private DefaultMutableTreeNode root;
+    private CustomTreeNode root;
 
-    public TreeVisualizationApp(DefaultMutableTreeNode root) {
+    public TreeVisualizationApp(CustomTreeNode root) {
         this.root = root;
     }
 
@@ -21,76 +16,84 @@ public class TreeVisualizationApp extends JPanel {
         }
     }
 
-    private void drawTree(Graphics2D g, DefaultMutableTreeNode node, int x, int y, int xOffset, int yOffset) {
-        // Draw the current node
+    private void drawNode(Graphics2D g, CustomTreeNode node, int x, int y) {
+        String text = node.toString();
+        int width = text.length() * 9;
+        int height = 30;
+        
         g.setColor(new Color(00, 100, 67));
-        g.fillOval(x - 10, y - 20, node.toString().length() * 9, 30);
+        
+        if (node.getNodeType().equals("circle")) {
+            g.fillOval(x - width/2, y - height/2, width, height);
+        } else if (node.getNodeType().equals("rectangle")) {
+            g.fillRect(x - width/2, y - height/2, width, height);
+        }
+        
         g.setColor(Color.WHITE);
-        g.drawString(node.toString(), x, y);
+        // Center the text in the node
+        FontMetrics fm = g.getFontMetrics();
+        int textX = x - fm.stringWidth(text)/2;
+        int textY = y + fm.getHeight()/4;
+        g.drawString(text, textX, textY);
+    }
+
+    private void drawTree(Graphics2D g, CustomTreeNode node, int x, int y, int xOffset, int yOffset) {
+        // Draw the current node
+        drawNode(g, node, x, y);
+
+        // Draw sibling connections first
+        g.setColor(Color.BLUE);
+        g.setStroke(new BasicStroke(2, BasicStroke.CAP_BUTT, BasicStroke.JOIN_BEVEL, 0, new float[]{9}, 0));
+        for (CustomTreeNode sibling : node.getSiblings()) {
+            int siblingX = x + xOffset;
+            // Draw dashed line for sibling connection
+            g.drawLine(x + node.toString().length() * 2, y, 
+                      siblingX - sibling.toString().length() * 2, y);
+            // Draw the sibling node
+            drawNode(g, sibling, siblingX, y);
+        }
 
         // Draw lines and child nodes
         int childCount = node.getChildCount();
+        g.setColor(Color.BLACK);
+        g.setStroke(new BasicStroke(2));
+        
         for (int i = 0; i < childCount; i++) {
-            DefaultMutableTreeNode childNode = (DefaultMutableTreeNode) node.getChildAt(i);
+            CustomTreeNode childNode = (CustomTreeNode) node.getChildAt(i);
             int childX = x - (childCount - 1) * xOffset / 2 + i * xOffset;
             int childY = y + yOffset;
 
             // Draw line to child
-            g.setColor(Color.BLACK);
-            g.setStroke(new BasicStroke(2));
-            g.drawLine(x + node.toString().length() * 2, y + 10, childX + childNode.toString().length() * 2, childY - 10);
+            g.drawLine(x, y + 15, childX, childY - 15);
 
             // Recursively draw the child node
             drawTree(g, childNode, childX, childY, xOffset / 2, yOffset);
         }
     }
 
-    public static void main(String[] args) {
-        // Create the tree structure
-        DefaultMutableTreeNode root = new DefaultMutableTreeNode("Root");
-        DefaultMutableTreeNode child1 = new DefaultMutableTreeNode("Child 1");
-        DefaultMutableTreeNode child2 = new DefaultMutableTreeNode("Child 2");
+    public static void main(String[] args){
+        // Create nodes with specific types
+        CustomTreeNode root = new CustomTreeNode("Root", "circle");
+        CustomTreeNode child1 = new CustomTreeNode("Child 1", "rectangle");
+        CustomTreeNode child2 = new CustomTreeNode("Child 2", "circle");
+        CustomTreeNode sibling = new CustomTreeNode("Sibling", "rectangle");
+
+        // Build the tree
         root.add(child1);
         root.add(child2);
-        child1.add(new DefaultMutableTreeNode("Grandchild 1"));
-        child2.add(new DefaultMutableTreeNode("Grandchild 2"));
-        child2.add(new DefaultMutableTreeNode("Grandchild 3"));
+        child1.addSibling(sibling);
 
+        // Create and display the visualization
+        TreeVisualizationApp app = new TreeVisualizationApp(root);
         // Create the frame
         JFrame frame = new JFrame("Custom Tree Visualization");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setSize(1500, 400);
 
         //Add the custom tree panel
-        TreeVisualizationApp treePanel = new TreeVisualizationApp(root);
-        frame.add(treePanel);
+        frame.add(app);
 
         // Display the frame
         frame.setVisible(true);
-
-//        List<Token> tokens= new ArrayList<>();
-//        tokens.add(new Token("IDENTIFIER", "x"));  // Identifier for the variable
-//        tokens.add(new Token("ASSIGN", ":="));      // Assignment operator
-//        tokens.add(new Token("NUMBER", "5"));       // Number for the right-hand side
-//        tokens.add(new Token("SEMICOLON", ";"));     // End of statement
-//
-//
-//        // Create the parser with the input tokens
-//       Parser parser = new Parser(tokens);
-//
-//        try {
-//            DefaultMutableTreeNode root = parser.parse();
-//            JFrame frame = new JFrame("Custom Tree Visualization");
-//            frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-//            frame.setSize(1500, 400);
-//            TreeVisualizationApp treePanel = new TreeVisualizationApp(root);
-//            frame.add(treePanel);
-//            frame.setVisible(true);
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
     }
-
-    // Helper method to print the tree for visual confirmation
-
 }
