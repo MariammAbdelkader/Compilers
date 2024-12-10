@@ -16,7 +16,7 @@ import java.io.FileReader;
     public class Main {
 
             public static void main(String[] args) {
-            JFrame mainframe = new JFrame("Simple GUI Example");
+            JFrame mainframe = new JFrame("Parser Main Window");
             mainframe.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
             mainframe.setSize(1000, 800);
             mainframe.setLocationRelativeTo(null); //center the mainframe
@@ -24,9 +24,10 @@ import java.io.FileReader;
 
             // Create a panel to hold components
             JPanel panel = new JPanel();
-            panel.setLayout(new BorderLayout());
+            //panel.setLayout(new BorderLayout());
             panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
-            panel.setPreferredSize(new Dimension(300, 200));
+            panel.setPreferredSize(new Dimension(1, 10)); // Set height to create space
+            panel.setPreferredSize(new Dimension(600, 200));
 
             // Create a text area
             JTextArea textArea = new JTextArea(20, 20);
@@ -38,25 +39,67 @@ import java.io.FileReader;
 
             //add a label
             JLabel label = new JLabel("Please Enter your TINY language code");
+
             label.setFont(new Font("Arial", Font.BOLD, 14)); // Customize font if needed
+            label.setAlignmentX(Component.CENTER_ALIGNMENT);
+            label.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10)); // Top, left, bottom, right padding
+            label.setOpaque(true);
+            label.setBackground(new Color(0xcce6ff));
 
 
             // Create a button
-            JButton button = new JButton("Start");
+            JButton button = new JButton("PARSE");
             JButton LoadFileButton = new JButton("Load File");
+
+
+            LoadFileButton.setBorder(BorderFactory.createEmptyBorder(10, 5, 10, 5)); // Top, left, bottom, right padding
+            button.setBorder(BorderFactory.createEmptyBorder(10, 5, 10, 5)); // Top, left, bottom, right padding
+
+                panel.add(label); // add label to top of panel
+                panel.add(Box.createVerticalStrut(10));  // Add space between label and text area
+                panel.add(scrollPane);
+                panel.add(Box.createVerticalStrut(10));  // Add space between label and text area
+                JPanel buttonPanel= new JPanel();
+                buttonPanel.setLayout(new BoxLayout(buttonPanel, BoxLayout.X_AXIS)); // Arrange components horizontally
+
+                buttonPanel.add(LoadFileButton);
+                buttonPanel.add(Box.createHorizontalStrut(170));
+
+                buttonPanel.add(button);
+
+
+                panel.add(buttonPanel);
+                mainframe.add(panel);
+
+                mainframe.setLayout(new FlowLayout(FlowLayout.CENTER));
+
+                //mainframe.add(buttonPanel,BorderLayout.PAGE_END);
+                //panel.add(outputLabel);
+
+                // Add the panel to the frame
+                mainframe.getContentPane().setBackground(Color.GRAY); // Light blue color
+
+                // Make the frame visible
+                mainframe.setVisible(true);
 
                 LoadFileButton.addActionListener(new ActionListener() {
                     @Override
                     public void actionPerformed(ActionEvent e) {
                         // Create a file chooser
                         JFileChooser fileChooser = new JFileChooser(); //create an instance for fileChooser
-                        int returnValue = fileChooser.showOpenDialog(mainframe); //Return = user option
+
+                        int returnValue = fileChooser.showOpenDialog(mainframe); //display opendialogReturn = user option
 
                         if (returnValue == JFileChooser.APPROVE_OPTION) { //if user clicked ok
-                            File selectedFile = fileChooser.getSelectedFile();//Retrieve selected file
-                            try (BufferedReader reader = new BufferedReader(new FileReader(selectedFile))) {
+                            File selectedFile = fileChooser.getSelectedFile();//Retrieve selected file from file chooser
+                            if(selectedFile == null || !selectedFile.exists()){
+                                JOptionPane.showMessageDialog(new JFrame(), "No file was selected.", "Warning", JOptionPane.WARNING_MESSAGE);
+                                return;
+                            }
+
+                            try (BufferedReader reader = new BufferedReader(new FileReader(selectedFile))) {   // Read the content of the selected file using BufferedReader
                                 String line;
-                                StringBuilder fileContent = new StringBuilder(); //stringbuilder to accumulate lines
+                                StringBuilder fileContent = new StringBuilder(); //StringBuilder to accumulate lines
                                 while ((line = reader.readLine()) != null) {
                                     fileContent.append(line).append("\n");//append lines to the string builder
                                 }
@@ -85,21 +128,6 @@ import java.io.FileReader;
             });
 
 
-
-                panel.add(label, BorderLayout.NORTH); // add label to top of panel
-                panel.add(LoadFileButton);
-                panel.add(scrollPane); // add scroll pane to the panel
-                panel.add(button); //add button to the pannel
-
-
-               mainframe.setLayout(new FlowLayout(FlowLayout.CENTER));
-               mainframe.add(panel);
-                //panel.add(outputLabel);
-
-            // Add the panel to the frame
-
-            // Make the frame visible
-            mainframe.setVisible(true);
 
             Scanner scanner = new Scanner(System.in);
             System.out.println("Enter your TINY language code:");
