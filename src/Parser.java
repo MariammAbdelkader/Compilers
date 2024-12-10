@@ -7,10 +7,12 @@ public class Parser {
 
     public Parser(List<Token> tokens) {
         this.tokens = tokens;
-        this.currentTokenIndex = 0;
+        this.currentTokenIndex = 1;
     }
 
     private void match(String expectedType) throws Exception {
+        //System.out.println("we reached match");
+        //System.out.println(currentTokenIndex);
         if (currentTokenIs(expectedType)) {
             currentTokenIndex++;
         } else {
@@ -18,13 +20,19 @@ public class Parser {
         }
     }
 
+
+
     private boolean currentTokenIs(String type) {
         return currentTokenIndex < tokens.size() && currentToken().getTokenType().equals(type);
     }
 
     private Token currentToken() {
-        return currentTokenIndex < tokens.size() ? tokens.get(currentTokenIndex) : null;
+        if (currentTokenIndex < tokens.size()) {
+            return tokens.get(currentTokenIndex);
+        }
+        return null;
     }
+
 
     // Grammar rules
 
@@ -176,9 +184,9 @@ public class Parser {
 
         while (currentToken() != null &&
                 (currentTokenIs("MULT") || currentTokenIs("DIV"))) {
+            CustomTreeNode mulop = new CustomTreeNode("op (" + currentToken().getTokenVal() + ")", "circle");
             match(currentToken().getTokenType()); // Match multiplication operator
             if(currentToken() != null) {
-                CustomTreeNode mulop = new CustomTreeNode("op (" + currentToken().getTokenVal() + ")", "circle");
                 mulop.add(termNode);
                 mulop.add(factor());
                 termNode = mulop;
