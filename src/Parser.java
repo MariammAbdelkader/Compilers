@@ -7,12 +7,17 @@ public class Parser {
 
     public Parser(List<Token> tokens) {
         this.tokens = tokens;
-        this.currentTokenIndex = 1;
+        this.currentTokenIndex = 0;
     }
 
     private void match(String expectedType) throws Exception {
         //System.out.println("we reached match");
-        //System.out.println(currentTokenIndex);
+       // System.out.println(currentTokenIndex);
+        Token token= currentToken();
+        if (token == null) {
+            System.out.println("End of input reached. Exiting match method.");// Exit without incrementing currentTokenIndex
+            throw new Exception("Syntax Error: Unexpected end of input. Expected " + expectedType);
+        }
         if (currentTokenIs(expectedType)) {
             currentTokenIndex++;
         } else {
@@ -23,11 +28,14 @@ public class Parser {
 
 
     private boolean currentTokenIs(String type) {
-        return currentTokenIndex < tokens.size() && currentToken().getTokenType().equals(type);
+        return currentTokenIndex < (tokens.size() -1) && currentToken().getTokenType().equals(type);
+        //stop at tokens.size()-1 as counter is 0 indexed
     }
 
     private Token currentToken() {
-        if (currentTokenIndex < tokens.size()) {
+        if (currentTokenIndex < tokens.size()-1 ) { //stop at tokens.size()-1 as counter is 0 indexed
+           // System.out.println(currentTokenIndex);
+            //System.out.println(tokens.size());
             return tokens.get(currentTokenIndex);
         }
         return null;
