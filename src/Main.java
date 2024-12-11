@@ -15,7 +15,7 @@ import java.io.FileReader;
 
 
     public class Main {
-        public static void Program (String input){
+        public static void Program(String input) {
             // Scanner scanner = new Scanner(System.in);
             // System.out.println("Enter your TINY language code:");
 
@@ -50,7 +50,7 @@ import java.io.FileReader;
                     TreeVisualizationApp app = new TreeVisualizationApp(root);
 
                     JFrame frame = new JFrame("Custom Tree Visualization");
-                    frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+                    frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);// close this frame only
                     frame.setSize(1500, 400);
                     frame.add(app);
                     frame.setVisible(true);
@@ -66,120 +66,133 @@ import java.io.FileReader;
                 }
             }
         }
-            public static void main(String[] args) {
-                JFrame mainframe = new JFrame("Parser Main Window");
-                mainframe.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-                mainframe.setSize(1000, 800);
-                mainframe.setLocationRelativeTo(null); //center the mainframe
+
+        public static void main(String[] args) {
+            JFrame mainframe = new JFrame("Parser Main Window");
+            mainframe.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+            mainframe.setSize(1000, 800);
+            mainframe.setLocationRelativeTo(null); //center the mainframe
 
 
-                // Create a panel to hold components
-                JPanel panel = new JPanel();
-                //panel.setLayout(new BorderLayout());
-                panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
-                panel.setPreferredSize(new Dimension(1, 10)); // Set height to create space
-                panel.setPreferredSize(new Dimension(600, 200));
+            // Create a panel to hold components
+            JPanel panel = new JPanel();
+            //panel.setLayout(new BorderLayout());
+            panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+            panel.setPreferredSize(new Dimension(1, 10)); // Set height to create space
+            panel.setPreferredSize(new Dimension(600, 200));
 
-                // Create a text area
-                JTextArea textArea = new JTextArea(20, 20);
-                textArea.setLineWrap(true); // Enable line wrapping
-                textArea.setWrapStyleWord(true);  // Ensures words are not split across lines
+            // Create a text area
+            JTextArea textArea = new JTextArea(20, 20);
+            textArea.setLineWrap(true); // Enable line wrapping
+            textArea.setWrapStyleWord(true);  // Ensures words are not split across lines
 
-                // Wrap the JTextArea in a JScrollPane to make it scrollable
-                JScrollPane scrollPane = new JScrollPane(textArea);
+            // Wrap the JTextArea in a JScrollPane to make it scrollable
+            JScrollPane scrollPane = new JScrollPane(textArea);
 
-                //add a label
-                JLabel label = new JLabel("Please Enter your TINY language code");
-
-                label.setFont(new Font("Arial", Font.BOLD, 14)); // Customize font if needed
-                label.setAlignmentX(Component.CENTER_ALIGNMENT);
-                label.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10)); // Top, left, bottom, right padding
-                label.setOpaque(true);
-                label.setBackground(new Color(0xcce6ff));
-
-
-                // Create a button
-                JButton button = new JButton("PARSE");
-                JButton LoadFileButton = new JButton("Load File");
+            //add a label
+            JLabel label = new JLabel("Please Enter your TINY language code");
+            label.setFont(new Font("Arial", Font.BOLD, 14)); // Customize font if needed
+            label.setAlignmentX(Component.CENTER_ALIGNMENT);
+            label.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10)); // Top, left, bottom, right padding
+            label.setOpaque(true);
+            label.setBackground(new Color(0xcce6ff));
 
 
-                LoadFileButton.setBorder(BorderFactory.createEmptyBorder(10, 5, 10, 5)); // Top, left, bottom, right padding
-                button.setBorder(BorderFactory.createEmptyBorder(10, 5, 10, 5)); // Top, left, bottom, right padding
-
-                panel.add(label); // add label to top of panel
-                panel.add(Box.createVerticalStrut(10));  // Add space between label and text area
-                panel.add(scrollPane);
-                panel.add(Box.createVerticalStrut(10));  // Add space between label and text area
-                JPanel buttonPanel = new JPanel();
-                buttonPanel.setLayout(new BoxLayout(buttonPanel, BoxLayout.X_AXIS)); // Arrange components horizontally
-
-                buttonPanel.add(LoadFileButton);
-                buttonPanel.add(Box.createHorizontalStrut(170));
-
-                buttonPanel.add(button);
+            // Create a button
+            JButton LoadFileButton = new JButton("Load File");
+            JButton button = new JButton("PARSE");
+            JButton ClearButton = new JButton("Clear Input");
 
 
-                panel.add(buttonPanel);
-                mainframe.add(panel);
+            LoadFileButton.setBorder(BorderFactory.createEmptyBorder(10, 5, 10, 5)); // Top, left, bottom, right padding
+            button.setBorder(BorderFactory.createEmptyBorder(10, 5, 10, 5)); // Top, left, bottom, right padding
+            ClearButton.setBorder(BorderFactory.createEmptyBorder(10, 5, 10, 5)); // Top, left, bottom, right padding
 
-                mainframe.setLayout(new FlowLayout(FlowLayout.CENTER));
 
-                //mainframe.add(buttonPanel,BorderLayout.PAGE_END);
-                //panel.add(outputLabel);
 
-                // Add the panel to the frame
-                mainframe.getContentPane().setBackground(Color.GRAY); // Light blue color
+            panel.add(label); // add label to top of panel
+            panel.add(Box.createVerticalStrut(10));  // Add space between label and text area
+            panel.add(scrollPane);
+            panel.add(Box.createVerticalStrut(10));  // Add space between label and text area
+            JPanel buttonPanel = new JPanel();
+            buttonPanel.setLayout(new BoxLayout(buttonPanel, BoxLayout.X_AXIS)); // Arrange components horizontally
 
-                // Make the frame visible
-                mainframe.setVisible(true);
+            buttonPanel.add(LoadFileButton);
+            buttonPanel.add(Box.createHorizontalStrut(55));
 
-                LoadFileButton.addActionListener(new ActionListener() {
-                    @Override
-                    public void actionPerformed(ActionEvent e) {
-                        // Create a file chooser
-                        JFileChooser fileChooser = new JFileChooser(); //create an instance for fileChooser
+            buttonPanel.add(button);
+            buttonPanel.add(Box.createHorizontalStrut(55));
 
-                        int returnValue = fileChooser.showOpenDialog(mainframe); //display opendialogReturn = user option
+            buttonPanel.add(ClearButton);
 
-                        if (returnValue == JFileChooser.APPROVE_OPTION) { //if user clicked ok
-                            File selectedFile = fileChooser.getSelectedFile();//Retrieve selected file from file chooser
-                            if (selectedFile == null || !selectedFile.exists()) {
-                                JOptionPane.showMessageDialog(new JFrame(), "No file was selected.", "Warning", JOptionPane.WARNING_MESSAGE);
-                                return;
+
+            panel.add(buttonPanel);
+            mainframe.add(panel);
+
+            mainframe.setLayout(new FlowLayout(FlowLayout.CENTER));
+
+            //mainframe.add(buttonPanel,BorderLayout.PAGE_END);
+            //panel.add(outputLabel);
+
+            // Add the panel to the frame
+            mainframe.getContentPane().setBackground(Color.GRAY); // Light blue color
+
+            // Make the frame visible
+            mainframe.setVisible(true);
+
+            LoadFileButton.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    // Create a file chooser
+                    JFileChooser fileChooser = new JFileChooser(); //create an instance for fileChooser
+
+                    int returnValue = fileChooser.showOpenDialog(mainframe); //display opendialogReturn = user option
+
+                    if (returnValue == JFileChooser.APPROVE_OPTION) { //if user clicked ok
+                        File selectedFile = fileChooser.getSelectedFile();//Retrieve selected file from file chooser
+                        if (selectedFile == null || !selectedFile.exists()) {
+                            JOptionPane.showMessageDialog(new JFrame(), "No file was selected.", "Warning", JOptionPane.WARNING_MESSAGE);
+                            return;
+                        }
+
+                        try (BufferedReader reader = new BufferedReader(new FileReader(selectedFile))) {   // Read the content of the selected file using BufferedReader
+                            String line;
+                            StringBuilder fileContent = new StringBuilder(); //StringBuilder to accumulate lines
+                            while ((line = reader.readLine()) != null) {
+                                fileContent.append(line).append("\n");//append lines to the string builder
                             }
-
-                            try (BufferedReader reader = new BufferedReader(new FileReader(selectedFile))) {   // Read the content of the selected file using BufferedReader
-                                String line;
-                                StringBuilder fileContent = new StringBuilder(); //StringBuilder to accumulate lines
-                                while ((line = reader.readLine()) != null) {
-                                    fileContent.append(line).append("\n");//append lines to the string builder
-                                }
-                                // Display the file content in the text area
-                                textArea.setText(fileContent.toString());
-                            } catch (IOException ex) {
-                                JOptionPane.showMessageDialog(mainframe, "Error reading file: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-                            }
+                            // Display the file content in the text area
+                            textArea.setText(fileContent.toString());
+                        } catch (IOException ex) {
+                            JOptionPane.showMessageDialog(mainframe, "Error reading file: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
                         }
                     }
-                });
+                }
+            });
 
 
-                // action listener to the button
-                button.addActionListener(new ActionListener() {
-                    @Override
-                    public void actionPerformed(ActionEvent e) {
-                        // Get the text from the text field
-                        String input = textArea.getText();
-                        Program(input);
-                        if (input.length() == 0) {
-                            JOptionPane.showMessageDialog(null, "The input is empty, Please Enter your TINY language code");
-                        }
-                        // Display the text in the label
-                        //outputLabel.setText("You entered: " + inputText);
+            // action listener to the button
+            button.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    // Get the text from the text field
+                    String input = textArea.getText();
+                    Program(input);
+                    if (input.length() == 0) {
+                        JOptionPane.showMessageDialog(null, "The input is empty, Please Enter your TINY language code");
                     }
-                });
+                    // Display the text in the label
+                }
+            });
 
-            }
+            ClearButton.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    // Get the text from the text field
+                    textArea.setText("");
+                }
+            });
 
+        }
 
     }
