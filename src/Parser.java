@@ -12,7 +12,7 @@ public class Parser {
 
     private void match(String expectedType) throws Exception {
         //System.out.println("we reached match");
-       // System.out.println(currentTokenIndex);
+
         Token token= currentToken();
         if (token == null) {
             System.out.println("End of input reached. Exiting match method.");// Exit without incrementing currentTokenIndex
@@ -23,17 +23,19 @@ public class Parser {
         } else {
             throw new Exception("Syntax Error: Expected " + expectedType + " but found " + currentToken().getTokenType());
         }
+        System.out.println(currentTokenIndex);
+        System.out.println(expectedType);
     }
 
 
 
     private boolean currentTokenIs(String type) {
-        return currentTokenIndex < (tokens.size() -1) && currentToken().getTokenType().equals(type);
+        return currentTokenIndex <= (tokens.size()-1) && currentToken().getTokenType().equals(type);
         //stop at tokens.size()-1 as counter is 0 indexed
     }
 
     private Token currentToken() {
-        if (currentTokenIndex < tokens.size()-1 ) { //stop at tokens.size()-1 as counter is 0 indexed
+        if (currentTokenIndex <= (tokens.size()-1)) { //stop at tokens.size()-1 as counter is 0 indexed
            // System.out.println(currentTokenIndex);
             //System.out.println(tokens.size());
             return tokens.get(currentTokenIndex);
