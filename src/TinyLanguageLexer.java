@@ -1,4 +1,6 @@
 import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class TinyLanguageLexer {
 
@@ -13,35 +15,27 @@ public class TinyLanguageLexer {
             "(", "OPENBRACKET", ")", "CLOSEDBRACKET"
     );
 
+    private static final Pattern TOKEN_PATTERN = Pattern.compile(
+            "\\s*(\\d+|[a-zA-Z]+|:=|[;<>+=\\-*/()])\\s*"
+    );
+
     public static List<Token> tokenize(String input) throws Exception {
         // Remove comments
         input = input.replaceAll("\\{[^}]*}", ""); // Remove comments enclosed in {}
 
         List<Token> tokens = new ArrayList<>();
-        StringTokenizer tokenizer = new StringTokenizer(input, "[;<>=+-*/() \t\n]", true);
+        Matcher matcher = TOKEN_PATTERN.matcher(input);
 
-        while (tokenizer.hasMoreTokens()) {
-            String tokenValue = tokenizer.nextToken().trim();
+        while (matcher.find()) {
+            String tokenValue = matcher.group().trim();
+            String tokenType;
 
             if (tokenValue.isEmpty()) continue;
 
-            String tokenType;
             if (RESERVED_WORDS.containsKey(tokenValue)) {
                 tokenType = RESERVED_WORDS.get(tokenValue);
             } else if (SYMBOLS.containsKey(tokenValue)) {
                 tokenType = SYMBOLS.get(tokenValue);
-            } else if (tokenValue.equals(":")) {
-                if (tokenizer.hasMoreTokens()) {
-                    String next = tokenizer.nextToken().trim();
-                    if (next.equals("=")) {
-                        tokenValue = ":=";
-                        tokenType = "ASSIGN";
-                    } else {
-                        throw new Exception("Invalid token: ':' without '='");
-                    }
-                } else {
-                    throw new Exception("Invalid token: ':' at end of input");
-                }
             } else if (tokenValue.matches("\\d+")) {
                 tokenType = "NUMBER";
             } else if (tokenValue.matches("[a-zA-Z]+")) {
@@ -51,7 +45,6 @@ public class TinyLanguageLexer {
             }
 
             tokens.add(new Token(tokenType, tokenValue));
-            Token.addToken (tokenType, tokenValue);
         }
 
         return tokens;
