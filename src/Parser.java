@@ -59,7 +59,7 @@ public class Parser {
     CustomTreeNode statementSequence(CustomTreeNode src) throws Exception {
         CustomTreeNode seqNode= new CustomTreeNode("stmt-sequence", "rectangle");
         seqNode= stmt(seqNode);
-        if(src != null) src.addSibling(seqNode);
+        if(src != null) src.add(seqNode);
         else src = seqNode;
         while (currentTokenIs("SEMICOLON")) {
             match("SEMICOLON");
@@ -99,7 +99,7 @@ public class Parser {
         src.add(conditionNode);
         match("THEN");
         CustomTreeNode thenNode = new CustomTreeNode("then", "rectangle");
-        thenNode = statementSequence(thenNode);
+        thenNode= (statementSequence(thenNode));
         src.add(thenNode);
         if (currentTokenIs("ELSE")) {
             match("ELSE");
