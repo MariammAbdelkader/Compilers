@@ -50,7 +50,7 @@ import java.io.FileReader;
                     TreeVisualizationApp app = new TreeVisualizationApp(root);
 
                     JFrame frame = new JFrame("Custom Tree Visualization");
-                    frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+                    frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE); // close this frame only
                     frame.setSize(1500, 400);
                     frame.add(app);
                     frame.setVisible(true);
@@ -101,12 +101,16 @@ import java.io.FileReader;
                 // Create a button
                 JButton button = new JButton("PARSE");
                 JButton LoadFileButton = new JButton("Load File");
-                JButton scanButton = new JButton("Scan");
+                JButton scanButton = new JButton(" Scan ");
+                JButton ClearButton = new JButton("Clear Input");
+
 
 
 
                 LoadFileButton.setBorder(BorderFactory.createEmptyBorder(10, 5, 10, 5)); // Top, left, bottom, right padding
                 button.setBorder(BorderFactory.createEmptyBorder(10, 5, 10, 5)); // Top, left, bottom, right padding
+                scanButton.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10)); // Top, left, bottom, right padding
+                ClearButton.setBorder(BorderFactory.createEmptyBorder(10, 5, 10, 5)); // Top, left, bottom, right padding
 
                 panel.add(label); // add label to top of panel
                 panel.add(Box.createVerticalStrut(10));  // Add space between label and text area
@@ -116,10 +120,12 @@ import java.io.FileReader;
                 buttonPanel.setLayout(new BoxLayout(buttonPanel, BoxLayout.X_AXIS)); // Arrange components horizontally
 
                 buttonPanel.add(LoadFileButton);
-                buttonPanel.add(Box.createHorizontalStrut(170));
+                buttonPanel.add(Box.createHorizontalStrut(35));
                 buttonPanel.add(scanButton);
-                buttonPanel.add(Box.createHorizontalStrut(170));
+                buttonPanel.add(Box.createHorizontalStrut(35));
                 buttonPanel.add(button);
+                buttonPanel.add(Box.createHorizontalStrut(35));
+                buttonPanel.add(ClearButton);
 
 
                 panel.add(buttonPanel);
@@ -206,11 +212,20 @@ import java.io.FileReader;
                             JOptionPane.showMessageDialog(null, "The input is empty, Please Enter your TINY language code");
                         }
                         // Display the text in the label
-                        //outputLabel.setText("You entered: " + inputText);
+                    }
+                });
+
+                ClearButton.addActionListener(new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        // Get the text from the text field
+                        textArea.setText("");
                     }
                 });
 
             }
+
+
 
 
     }
