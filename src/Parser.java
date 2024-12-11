@@ -98,7 +98,7 @@ public class Parser {
         CustomTreeNode conditionNode = expr();
         src.add(conditionNode);
         match("THEN");
-        CustomTreeNode thenNode = new CustomTreeNode("then", "rectangle");
+        CustomTreeNode thenNode = null;
         thenNode= (statementSequence(thenNode));
         src.add(thenNode);
         if (currentTokenIs("ELSE")) {
