@@ -12,7 +12,7 @@ public class TreeVisualizationApp extends JPanel {
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
         if (root != null) {
-            drawTree((Graphics2D) g, root, getWidth() / 2, 30, 600, 50);
+            drawTree((Graphics2D) g, root, getWidth() / 8, 30, 400, 50);
         }
     }
 
@@ -40,21 +40,21 @@ public class TreeVisualizationApp extends JPanel {
     private void drawTree(Graphics2D g, CustomTreeNode node, int x, int y, int xOffset, int yOffset) {
         // Draw the current node
         drawNode(g, node, x, y);
-
+        int childCount = node.getChildCount();
         // Draw sibling connections first
-        g.setColor(Color.BLUE);
-        g.setStroke(new BasicStroke(2, BasicStroke.CAP_BUTT, BasicStroke.JOIN_BEVEL, 0, new float[]{9}, 0));
+        g.setColor(Color.BLACK);
+        g.setStroke(new BasicStroke(2));
         for (CustomTreeNode sibling : node.getSiblings()) {
             int siblingX = x + xOffset;
             // Draw dashed line for sibling connection
-            g.drawLine(x + node.toString().length() * 2, y, 
+            g.drawLine(x + Math.toIntExact(Math.round(node.toString().length() * 4.5)), y, 
                       siblingX - sibling.toString().length() * 2, y);
             // Draw the sibling node
-            drawNode(g, sibling, siblingX, y);
+            //drawNode(g, sibling, siblingX, y);
+            drawTree(g, sibling, siblingX, y, (childCount+1)*xOffset, yOffset);
         }
 
         // Draw lines and child nodes
-        int childCount = node.getChildCount();
         g.setColor(Color.BLACK);
         g.setStroke(new BasicStroke(2));
         
@@ -67,7 +67,7 @@ public class TreeVisualizationApp extends JPanel {
             g.drawLine(x, y + 15, childX, childY - 15);
 
             // Recursively draw the child node
-            drawTree(g, childNode, childX, childY, xOffset / 2, yOffset);
+            drawTree(g, childNode, childX, childY, Math.toIntExact(Math.round(xOffset/2)), yOffset);
         }
     }
 

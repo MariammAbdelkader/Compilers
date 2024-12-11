@@ -64,12 +64,11 @@ public class Parser {
         while (currentTokenIs("SEMICOLON")) {
             match("SEMICOLON");
             CustomTreeNode seqNode2= new CustomTreeNode("stmt","rectangle");
-            seqNode.addSibling(stmt(seqNode2));
+            seqNode2 = stmt(seqNode2);
+            seqNode.addSibling(seqNode2);
             seqNode = seqNode2;
         }
-
-        if(src != null) return src;
-        return seqNode;
+        return src;
     }
 
     // Stmt → if-stmt | repeat-stmt | assign-stmt | read-stmt | write-stmt
