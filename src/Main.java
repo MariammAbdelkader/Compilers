@@ -101,6 +101,8 @@ import java.io.FileReader;
                 // Create a button
                 JButton button = new JButton("PARSE");
                 JButton LoadFileButton = new JButton("Load File");
+                JButton scanButton = new JButton("Scan");
+
 
 
                 LoadFileButton.setBorder(BorderFactory.createEmptyBorder(10, 5, 10, 5)); // Top, left, bottom, right padding
@@ -115,7 +117,8 @@ import java.io.FileReader;
 
                 buttonPanel.add(LoadFileButton);
                 buttonPanel.add(Box.createHorizontalStrut(170));
-
+                buttonPanel.add(scanButton);
+                buttonPanel.add(Box.createHorizontalStrut(170));
                 buttonPanel.add(button);
 
 
@@ -163,6 +166,34 @@ import java.io.FileReader;
                     }
                 });
 
+                scanButton.addActionListener(new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        String input = textArea.getText();  // Get the input from the text area
+
+                        if (input.isEmpty()) {
+                            JOptionPane.showMessageDialog(mainframe, "The input is empty. Please enter your TINY language code.", "Warning", JOptionPane.WARNING_MESSAGE);
+                            return;
+                        }
+
+                        try {
+                            // Tokenize the input using TinyLanguageLexer
+                            List<Token> tokens = TinyLanguageLexer.tokenize(input);
+
+                            // Display tokens in the console or in a message
+                            StringBuilder tokenDetails = new StringBuilder();
+                            for (Token token : tokens) {
+                                tokenDetails.append(token.getTokenVal()).append(" , ").append(token.getTokenType()).append("\n");
+                            }
+
+                            // Display tokens in the text area (or use other ways to present the output)
+                            JOptionPane.showMessageDialog(mainframe, "Scan completed! Tokens:\n" + tokenDetails.toString(), "Scan Results", JOptionPane.INFORMATION_MESSAGE);
+
+                        } catch (Exception ex) {
+                            JOptionPane.showMessageDialog(mainframe, "Error during scanning: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+                        }
+                    }
+                });
 
                 // action listener to the button
                 button.addActionListener(new ActionListener() {
