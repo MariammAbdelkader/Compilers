@@ -114,7 +114,7 @@ public class Parser {
     // Repeat-stmt → repeat stmt-sequence until expr
     CustomTreeNode repeatStmt(CustomTreeNode src) throws Exception {
         src.setUserObject("repeat");
-        CustomTreeNode repeatNode = new CustomTreeNode("REPEAT", "rectangle");
+        CustomTreeNode repeatNode = new CustomTreeNode("repeat", "rectangle");
 
         match("REPEAT");
         repeatNode = statementSequence(repeatNode);
