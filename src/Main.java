@@ -103,17 +103,23 @@ public class Main {
                     while ((line = reader.readLine()) != null) {
                         if (line.trim().isEmpty()) continue;
 
-                        String[] parts = line.split(":");
+                        // Split safely: ':' not followed by '=' so that the := remains intact
+                        String[] parts = line.split(":(?!=)");
+
                         if (parts.length == 2) {
                             String tokenVal = parts[0].trim();
                             String tokenType = parts[1].trim();
 
+                            // Create a new Token object
                             Token token = new Token(tokenType, tokenVal);
+
+                            // Add the token to the list
                             loadedTokens.add(token);
                         } else {
                             System.err.println("Invalid line format: " + line);
                         }
                     }
+
 
                     // Debug print to verify tokens
                     System.out.println("Loaded Tokens: " + loadedTokens);
