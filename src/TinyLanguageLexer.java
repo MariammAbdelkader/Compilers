@@ -9,11 +9,20 @@ public class TinyLanguageLexer {
             "if", "IF", "then", "THEN", "end", "END", "repeat", "REPEAT",
             "until", "UNTIL", "read", "READ", "write", "WRITE"
     );
-    private static final Map<String, String> SYMBOLS = Map.of(
-            ";", "SEMICOLON", ":=", "ASSIGN", "<", "LESSTHAN", "=",
-            "EQUAL", "+", "PLUS", "-", "MINUS", "*", "MULT", "/", "DIV",
-            "(", "OPENBRACKET", ")", "CLOSEDBRACKET"
+    private static final Map<String, String> SYMBOLS = Map.ofEntries(
+            Map.entry(";", "SEMICOLON"),
+            Map.entry(":=", "ASSIGN"),
+            Map.entry("<", "LESSTHAN"),
+            Map.entry("=", "EQUAL"),
+            Map.entry("+", "PLUS"),
+            Map.entry("-", "MINUS"),
+            Map.entry("*", "MULT"),
+            Map.entry("/", "DIV"),
+            Map.entry("(", "OPENBRACKET"),
+            Map.entry(")", "CLOSEDBRACKET"),
+            Map.entry(">", "GREATERTHAN") // Added greater-than symbol
     );
+
 
     private static final Pattern TOKEN_PATTERN = Pattern.compile(
             "\\s*(\\d+|[a-zA-Z]+|:=|[;<>+=\\-*/()])\\s*"
