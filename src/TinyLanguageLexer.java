@@ -5,22 +5,21 @@ import java.util.regex.Pattern;
 public class TinyLanguageLexer {
 
     // Token definitions
-    private static final Map<String, String> RESERVED_WORDS = Map.of(
-            "if", "IF", "then", "THEN", "end", "END", "repeat", "REPEAT",
-            "until", "UNTIL", "read", "READ", "write", "WRITE"
+    private static final Map<String, String> RESERVED_WORDS = Map.ofEntries(
+            Map.entry("if", "IF"),
+            Map.entry("then", "THEN"),
+            Map.entry("end", "END"),
+            Map.entry("repeat", "REPEAT"),
+            Map.entry("until", "UNTIL"),
+            Map.entry("read", "READ"),
+            Map.entry("write", "WRITE"),
+            Map.entry("else", "ELSE") // Added else keyword
     );
-    private static final Map<String, String> SYMBOLS = Map.ofEntries(
-            Map.entry(";", "SEMICOLON"),
-            Map.entry(":=", "ASSIGN"),
-            Map.entry("<", "LESSTHAN"),
-            Map.entry("=", "EQUAL"),
-            Map.entry("+", "PLUS"),
-            Map.entry("-", "MINUS"),
-            Map.entry("*", "MULT"),
-            Map.entry("/", "DIV"),
-            Map.entry("(", "OPENBRACKET"),
-            Map.entry(")", "CLOSEDBRACKET"),
-            Map.entry(">", "GREATERTHAN") // Added greater-than symbol
+
+    private static final Map<String, String> SYMBOLS = Map.of(
+            ";", "SEMICOLON", ":=", "ASSIGN", "<", "LESSTHAN", "=",
+            "EQUAL", "+", "PLUS", "-", "MINUS", "*", "MULT", "/", "DIV",
+            "(", "OPENBRACKET", ")", "CLOSEDBRACKET"
     );
 
 
