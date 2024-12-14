@@ -28,6 +28,7 @@ public class Token {
         return this.tokenType;
     }
 
+
     public static void addToken(String type, String value) {
         tokens.add(new Token(type, value));
     }
