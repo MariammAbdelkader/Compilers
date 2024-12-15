@@ -134,28 +134,37 @@ public class Main {
 
         scanButton.addActionListener(e -> {
             String input = textArea.getText();
-            if (input.isEmpty()) {
+            if (input.isEmpty() && loadedTokens == null) {
                 JOptionPane.showMessageDialog(mainframe, "The input is empty. Please enter your TINY language code.", "Warning", JOptionPane.WARNING_MESSAGE);
                 return;
             }
-
-            try {
-                List<Token> tokens = TinyLanguageLexer.tokenize(input);
-                loadedTokens = tokens; // Update shared tokens
+            else if (loadedTokens != null){
                 StringBuilder tokenDetails = new StringBuilder();
 
-                for (Token token : tokens) {
+                for (Token token : loadedTokens) {
                     tokenDetails.append(token.getTokenVal()).append(" : ").append(token.getTokenType()).append("\n");
                 }
+                JOptionPane.showMessageDialog(mainframe, "Tokens already loaded!\n" + tokenDetails, "Scan Results", JOptionPane.INFORMATION_MESSAGE);
+            }
+            else {
+                try {
+                    List<Token> tokens = TinyLanguageLexer.tokenize(input);
+                    loadedTokens = tokens; // Update shared tokens
+                    StringBuilder tokenDetails = new StringBuilder();
 
-                try (FileWriter writer = new FileWriter("tokens_output.txt")) {
-                    writer.write(tokenDetails.toString());
-                    JOptionPane.showMessageDialog(mainframe, "Tokens saved to tokens_output.txt", "Success", JOptionPane.INFORMATION_MESSAGE);
+                    for (Token token : tokens) {
+                        tokenDetails.append(token.getTokenVal()).append(" : ").append(token.getTokenType()).append("\n");
+                    }
+
+                    try (FileWriter writer = new FileWriter("tokens_output.txt")) {
+                        writer.write(tokenDetails.toString());
+                        JOptionPane.showMessageDialog(mainframe, "Tokens saved to tokens_output.txt", "Success", JOptionPane.INFORMATION_MESSAGE);
+                    }
+
+                    JOptionPane.showMessageDialog(mainframe, "Scan completed!\n" + tokenDetails, "Scan Results", JOptionPane.INFORMATION_MESSAGE);
+                } catch (Exception ex) {
+                    JOptionPane.showMessageDialog(mainframe, "Error during scanning: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
                 }
-
-                JOptionPane.showMessageDialog(mainframe, "Scan completed!\n" + tokenDetails, "Scan Results", JOptionPane.INFORMATION_MESSAGE);
-            } catch (Exception ex) {
-                JOptionPane.showMessageDialog(mainframe, "Error during scanning: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
             }
         });
 
